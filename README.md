@@ -4,11 +4,12 @@ A simple Model Context Protocol (MCP) server that provides GUID generation funct
 
 ## Overview
 
-This project implements an MCP server that exposes a single tool for generating GUIDs (Globally Unique Identifiers). The server uses the stdio transport protocol to communicate with MCP clients, making it easy to integrate with various AI assistants and development tools.
+This project implements an MCP server that exposes tools for generating GUIDs (Globally Unique Identifiers). The server uses the stdio transport protocol to communicate with MCP clients, making it easy to integrate with various AI assistants and development tools.
 
 ## Features
 
 - **Generate GUID**: Creates a new random GUID in standard string format
+- **Generate Multiple GUIDs**: Creates multiple GUIDs in a single call for improved efficiency
 - **Lightweight**: Minimal dependencies and fast startup time
 - **Cross-platform**: Runs on Windows, macOS, and Linux
 - **Standards-compliant**: Uses the standard .NET `Guid.NewGuid()` implementation
@@ -21,12 +22,14 @@ This project implements an MCP server that exposes a single tool for generating 
 ## Installation
 
 1. Clone this repository:
+
    ```bash
    git clone https://github.com/ilyasakin/GuidMcp
    cd GuidMcp
    ```
 
 2. Build the project:
+
    ```bash
    dotnet build
    ```
@@ -57,8 +60,29 @@ Generates a new GUID and returns it as a string.
 **Returns**: A string representation of a newly generated GUID
 
 **Example output**:
+
 ```
 a6af25e4-649f-47cb-9ed8-0a5ca26d14e3
+```
+
+#### GenerateMultipleGuids
+
+Generates multiple GUIDs and returns them as an array.
+
+**Parameters**:
+
+- `count` (int): The number of GUIDs to generate
+
+**Returns**: An array of strings, each containing a newly generated GUID
+
+**Example output**:
+
+```
+[
+  "a6af25e4-649f-47cb-9ed8-0a5ca26d14e3",
+  "b7f3d9e1-7a2b-4c5d-8e9f-1a2b3c4d5e6f",
+  "c8g4e0f2-8b3c-5d6e-9f0g-2b3c4d5e6f7g"
+]
 ```
 
 ### Integration with MCP Clients
@@ -83,8 +107,10 @@ Once configured, you can ask your AI assistant to generate GUIDs:
 - "Generate a new GUID for me"
 - "I need a unique identifier"
 - "Create a GUID for this new record"
+- "Generate 5 GUIDs for my database records"
+- "I need 10 unique identifiers"
 
-The AI assistant will call the `GenerateGuid` tool and return a fresh GUID each time.
+The AI assistant will call the appropriate tool (`generate_guid` for single GUIDs or `generate_multiple_guids` for multiple GUIDs) and return fresh GUIDs each time.
 
 ## Development
 

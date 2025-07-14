@@ -12,4 +12,15 @@ public sealed class GuidTools
     {
         return Guid.NewGuid().ToString();
     }
+
+    [McpServerTool, Description("Generate multiple GUIDs.")]
+    public static string[] GenerateMultipleGuids(int count)
+    {
+        var guids = new string[count];
+        for (int i = 0; i < count; i++)
+        {
+            guids[i] = Guid.NewGuid().ToString();
+        }
+        return guids;
+    }
 }
