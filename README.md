@@ -79,9 +79,9 @@ Generates multiple GUIDs and returns them as an array.
 
 ```
 [
-  "a6af25e4-649f-47cb-9ed8-0a5ca26d14e3",
-  "b7f3d9e1-7a2b-4c5d-8e9f-1a2b3c4d5e6f",
-  "c8g4e0f2-8b3c-5d6e-9f0g-2b3c4d5e6f7g"
+  "e56ea49d-7f2a-415b-9829-e6d92d74f9ca",
+  "05fbc459-3954-44fa-9fa2-a2fc1240dd17",
+  "10a90f53-c644-456f-a79e-2dd03551d9c9"
 ]
 ```
 
