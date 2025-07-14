@@ -22,7 +22,7 @@ This project implements an MCP server that exposes a single tool for generating 
 
 1. Clone this repository:
    ```bash
-   git clone <repository-url>
+   git clone https://github.com/ilyasakin/GuidMcp
    cd GuidMcp
    ```
 
