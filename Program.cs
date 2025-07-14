@@ -1,6 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using QuickstartWeatherServer.Tools;
+using GuidMcp.Tools;
 
 using var host = new HostBuilder()
     .ConfigureServices(services =>
