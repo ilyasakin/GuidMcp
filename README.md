@@ -16,7 +16,8 @@ This project implements an MCP server that exposes tools for generating GUIDs (G
 
 ## Prerequisites
 
-- .NET 8.0 or later
+- .NET 8 SDK for building; .NET 8 runtime for the framework-dependent server
+- Python 3 for the dependency-free protocol regression test
 - An MCP-compatible client (such as Claude Desktop, Cursor, or other AI assistants)
 
 ## Installation
@@ -36,7 +37,7 @@ This project implements an MCP server that exposes tools for generating GUIDs (G
 
 3. Run the server:
    ```bash
-   dotnet run
+   dotnet bin/Debug/net8.0/GuidMcp.dll
    ```
 
 ## Usage
@@ -46,8 +47,11 @@ This project implements an MCP server that exposes tools for generating GUIDs (G
 The server communicates via standard input/output (stdio), so it's typically launched by an MCP client rather than run directly by users.
 
 ```bash
-dotnet run
+dotnet build --configuration Release
+dotnet bin/Release/net8.0/GuidMcp.dll
 ```
+
+Build before connecting a client. Standard output is reserved for MCP JSON-RPC; diagnostics go to standard error. Launching the built DLL avoids build output entering the protocol stream.
 
 ### Available Tools
 
@@ -73,7 +77,7 @@ Generates multiple GUIDs and returns them as an array.
 
 - `count` (int): The number of GUIDs to generate
 
-**Returns**: An array of strings, each containing a newly generated GUID
+**Returns**: An array of strings from the C# method, transmitted over MCP as one text content block per GUID. A count of zero returns no content blocks; a negative count returns a tool error.
 
 **Example output**:
 
@@ -94,7 +98,7 @@ To use this server with an MCP client, you'll need to configure the client to la
   "mcpServers": {
     "guid-generator": {
       "command": "dotnet",
-      "args": ["run", "--project", "/path/to/GuidMcp"]
+      "args": ["/path/to/GuidMcp/bin/Release/net8.0/GuidMcp.dll"]
     }
   }
 }
@@ -128,15 +132,19 @@ GuidMcp/
 ### Building and Testing
 
 ```bash
-# Build the project
-dotnet build
-
-# Run the project
-dotnet run
-
-# Build for release
 dotnet build --configuration Release
+python3 tests/stdio_smoke.py dotnet bin/Release/net8.0/GuidMcp.dll
+
+# Native AOT (requires the platform's native compiler/linker prerequisites)
+dotnet publish --configuration Release --runtime linux-x64 --output artifacts/native
+python3 tests/stdio_smoke.py ./artifacts/native/GuidMcp
 ```
+
+The protocol regression test checks initialization, exact tool names and input schema, UUID v4 format, uniqueness, zero/single/multiple counts, negative-count error recovery, stdout purity, and clean shutdown. It uses only Python's standard library and exercises the actual server process. CI runs it against both the managed build and the Linux Native AOT executable.
+
+### Dependency upgrades
+
+The current target and MCP preview version are retained until a stable SDK migration passes the protocol tests. In particular, changing SDK versions can change serialization of `string[]`; preserve the existing one-text-block-per-GUID response. .NET 8 support ends November 10, 2026, so migration to .NET 10 LTS should be completed before then. See the [.NET support policy](https://dotnet.microsoft.com/en-us/platform/support/policy) and [MCP SDK releases](https://github.com/modelcontextprotocol/csharp-sdk/releases).
 
 ## LICENSE
 
